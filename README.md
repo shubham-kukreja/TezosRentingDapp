@@ -13,10 +13,10 @@ In a traditional renting contract the deposit value is held by a trusted third p
 
 ## Screenshots : 
 Home Screen :
-![HomeScreen]('./screenshots/1.png')
+![HomeScreen](./screenshots/1.png)
 
 Transaction using Thanos Wallet :
-![HomeScreen]('./screenshots/6.png')
+![HomeScreen](./screenshots/6.png)
 
 ## Tech Stack :
 1. SmartPy ( IDE & Deployment)
