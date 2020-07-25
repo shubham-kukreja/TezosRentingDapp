@@ -26,8 +26,6 @@ export default function HomeScreen() {
       <br />
       <br />
       <br />
-      <br />
-      <br />
       <Grid container spacing={1}>
         <Grid item xs={6}>
           <Typography variant="h2" component="h2">

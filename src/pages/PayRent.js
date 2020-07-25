@@ -1,30 +1,19 @@
 import React, { useState } from "react";
-import Axios from "axios";
 import { Button, TextField, Typography } from "@material-ui/core";
-import {
-  TezosNodeWriter,
-  TezosParameterFormat,
-  TezosNodeReader,
-} from "conseiljs";
+import { TezosNodeWriter, TezosParameterFormat } from "conseiljs";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 const tezosNode = "https://carthagenet.smartpy.io";
-async function getContractStorage() {
-  const result = await TezosNodeReader.getContractStorage(
-    "https://carthagenet.smartpy.io",
-    "KT1MuMtaXpjnMYss8VCxEdUgY4nGRUfjbogt"
-  );
-  console.log(result);
-}
 
-export default function RentIn() {
+export default function PayRent() {
   const [houseAddress, setHouseAddress] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [publicKey, setPublicKey] = useState("");
   const [pkhKey, setPkhKey] = useState("");
   const [deposit, setDeposit] = useState(0);
+  const [rent, setRent] = useState(0);
 
-  const submitForm = async () => {
+  const submitForm = async (arg) => {
     console.log(houseAddress, privateKey, publicKey, pkhKey, deposit);
     const keystore = {
       publicKey: publicKey,
@@ -35,18 +24,19 @@ export default function RentIn() {
     };
     const contractAddress = "KT1MuMtaXpjnMYss8VCxEdUgY4nGRUfjbogt";
     let result;
+    let amount = arg ? 0 : rent * 1000000;
     try {
       result = await TezosNodeWriter.sendContractInvocationOperation(
         tezosNode,
         keystore,
         contractAddress,
-        deposit * 1000000,
+        amount,
         100000,
         "",
         1000,
         750000,
         undefined,
-        `(Left (Left "${houseAddress}"))`,
+        `(Right (Left (Right "${houseAddress}")))`,
         TezosParameterFormat.Michelson
       );
     } catch (err) {
@@ -57,14 +47,19 @@ export default function RentIn() {
     setPrivateKey("");
     setPublicKey("");
     setDeposit(0);
+    setRent(0);
     alert(`Injected operation group id ${result.operationGroupID}`);
     return result.operationGroupID;
+  };
+
+  const getPreviousRents = () => {
+    console.log("Get Rent.");
   };
 
   return (
     <div className="center">
       <Typography variant="h4" component="h2">
-        Accept Agreement
+        Pay Rent
       </Typography>
       <div className="form-container">
         <TextField
@@ -73,6 +68,14 @@ export default function RentIn() {
           className="text-field-key"
           onChange={(e) => setHouseAddress(e.target.value)}
           value={houseAddress}
+        />
+        <br />
+        <TextField
+          id="standard-basic"
+          label="Rent Amount"
+          className="text-field-key"
+          onChange={(e) => setRent(e.target.value)}
+          value={rent}
         />
         <br />
         <TextField
@@ -99,23 +102,37 @@ export default function RentIn() {
           value={pkhKey}
         />
         <br />
-        <TextField
-          id="standard-basic"
-          label="Deposit Amount"
-          className="text-field-key"
-          onChange={(e) => setDeposit(e.target.value)}
-          value={deposit}
-        />
-        <br />
-        <Button
-          onClick={() => submitForm()}
+        <ButtonGroup
           variant="contained"
           color="primary"
-          endIcon={<ArrowForwardIcon />}
+          aria-label="contained primary button group"
         >
-          Accept & Pay Deposit
-        </Button>
-        <Button onClick={() => getContractStorage()}>Get Storage</Button>
+          <Button
+            onClick={() => submitForm(0)}
+            variant="contained"
+            color="primary"
+            endIcon={<ArrowForwardIcon />}
+          >
+            Pay Rent
+          </Button>
+
+          <Button
+            onClick={() => getPreviousRents()}
+            variant="contained"
+            color="primary"
+            endIcon={<ArrowForwardIcon />}
+          >
+            Previous Payments
+          </Button>
+          <Button
+            onClick={() => submitForm(1)}
+            variant="contained"
+            color="primary"
+            endIcon={<ArrowForwardIcon />}
+          >
+            Mark Dispute
+          </Button>
+        </ButtonGroup>
       </div>
     </div>
   );

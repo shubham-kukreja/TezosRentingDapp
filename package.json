@@ -16,8 +16,7 @@
     "react-dom": "^16.13.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
-    "eztz": "git://github.com/TezTech/eztz.git#0c6b93ffdd774f7ed3c528058f854deb0649a61c"
+    "react-scripts": "3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",

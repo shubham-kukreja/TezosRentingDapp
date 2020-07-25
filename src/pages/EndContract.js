@@ -1,28 +1,16 @@
 import React, { useState } from "react";
-import Axios from "axios";
 import { Button, TextField, Typography } from "@material-ui/core";
-import {
-  TezosNodeWriter,
-  TezosParameterFormat,
-  TezosNodeReader,
-} from "conseiljs";
+import { TezosNodeWriter, TezosParameterFormat } from "conseiljs";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-
 const tezosNode = "https://carthagenet.smartpy.io";
-async function getContractStorage() {
-  const result = await TezosNodeReader.getContractStorage(
-    "https://carthagenet.smartpy.io",
-    "KT1MuMtaXpjnMYss8VCxEdUgY4nGRUfjbogt"
-  );
-  console.log(result);
-}
 
-export default function RentIn() {
+export default function EndContract() {
   const [houseAddress, setHouseAddress] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [publicKey, setPublicKey] = useState("");
   const [pkhKey, setPkhKey] = useState("");
   const [deposit, setDeposit] = useState(0);
+  const [rent, setRent] = useState(0);
 
   const submitForm = async () => {
     console.log(houseAddress, privateKey, publicKey, pkhKey, deposit);
@@ -40,13 +28,13 @@ export default function RentIn() {
         tezosNode,
         keystore,
         contractAddress,
-        deposit * 1000000,
+        0,
         100000,
         "",
         1000,
         750000,
         undefined,
-        `(Left (Left "${houseAddress}"))`,
+        `(Left (Right (Left (Pair ${deposit} (Pair "${houseAddress}" ${rent})))))`,
         TezosParameterFormat.Michelson
       );
     } catch (err) {
@@ -57,6 +45,7 @@ export default function RentIn() {
     setPrivateKey("");
     setPublicKey("");
     setDeposit(0);
+    setRent(0);
     alert(`Injected operation group id ${result.operationGroupID}`);
     return result.operationGroupID;
   };
@@ -64,7 +53,7 @@ export default function RentIn() {
   return (
     <div className="center">
       <Typography variant="h4" component="h2">
-        Accept Agreement
+        End Contract
       </Typography>
       <div className="form-container">
         <TextField
@@ -73,6 +62,22 @@ export default function RentIn() {
           className="text-field-key"
           onChange={(e) => setHouseAddress(e.target.value)}
           value={houseAddress}
+        />
+        <br />
+        <TextField
+          id="standard-basic"
+          label="Deposit Amount"
+          className="text-field-key"
+          onChange={(e) => setDeposit(e.target.value)}
+          value={deposit}
+        />
+        <br />
+        <TextField
+          id="standard-basic"
+          label="Rent Per Month"
+          className="text-field-key"
+          onChange={(e) => setRent(e.target.value)}
+          value={rent}
         />
         <br />
         <TextField
@@ -99,23 +104,14 @@ export default function RentIn() {
           value={pkhKey}
         />
         <br />
-        <TextField
-          id="standard-basic"
-          label="Deposit Amount"
-          className="text-field-key"
-          onChange={(e) => setDeposit(e.target.value)}
-          value={deposit}
-        />
-        <br />
         <Button
           onClick={() => submitForm()}
           variant="contained"
           color="primary"
           endIcon={<ArrowForwardIcon />}
         >
-          Accept & Pay Deposit
+          Add Property & Transact
         </Button>
-        <Button onClick={() => getContractStorage()}>Get Storage</Button>
       </div>
     </div>
   );
