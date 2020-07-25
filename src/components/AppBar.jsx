@@ -38,6 +38,7 @@ export default function ButtonAppBar(props) {
             Renting Platfrom
           </Typography>
           <Button color="inherit">{props.accountAddress}</Button>
+          <Button color="inherit">{props.accountBalance} XTZ</Button>
         </Toolbar>
       </AppBar>
     </div>

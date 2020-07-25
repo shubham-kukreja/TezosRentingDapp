@@ -8,7 +8,7 @@ import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    margin: "0 30%",
+    padding: "0 20%",
   },
   paper: {
     padding: theme.spacing(2),
@@ -25,11 +25,21 @@ export default function HomeScreen() {
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="h2">Renting Dapp</Typography>
+      <Grid container spacing={1}>
+        <Grid item xs={10} sm={6} style={{ color: "#3f51b5" }}>
+          <br />
+          <br />
+          <Typography variant="h4" style={{ marginLeft: 7 }}>
+            Decentralized{" "}
+          </Typography>
+          <Typography variant="h1" style={{ fontWeight: 800 }}>
+            Renting{" "}
+          </Typography>
+          <Typography variant="h1" style={{ fontWeight: 700 }}>
+            Dapp
+          </Typography>
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={5} sm={6}>
           <Link to="rentout">
             <Button
               variant="contained"

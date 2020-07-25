@@ -1,10 +1,9 @@
-import React, { useEffect, Component } from "react";
+import React, { Component } from "react";
 import "./App.css";
 import ButtonAppBar from "./components/AppBar.jsx";
 import Router from "./Router";
 import getThanos from "./util/thanos";
 import { contractAddress } from "./constants/contract";
-import { Button } from "@material-ui/core";
 
 class App extends Component {
   state = {
@@ -21,7 +20,8 @@ class App extends Component {
       const instance = await tezos.wallet.at(contractAddress);
       this.setState({
         address: accountPkh,
-        instance : instance,
+        balance: parseInt(accountBalance) / 1000000,
+        instance: instance,
       });
     } catch (err) {
       console.log(err);
@@ -31,7 +31,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <ButtonAppBar accountAddress={this.state.address} />
+        <ButtonAppBar
+          accountAddress={this.state.address}
+          accountBalance={this.state.balance}
+        />
         <br />
         <br />
         <br />
