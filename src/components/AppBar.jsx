@@ -5,6 +5,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonAppBar() {
+export default function ButtonAppBar(props) {
   const classes = useStyles();
 
   return (
@@ -36,6 +37,7 @@ export default function ButtonAppBar() {
           <Typography variant="h6" className={classes.title}>
             Renting Platfrom
           </Typography>
+          <Button color="inherit">{props.accountAddress}</Button>
         </Toolbar>
       </AppBar>
     </div>

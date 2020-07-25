@@ -1,64 +1,32 @@
-import React, { useState } from "react";
-import Axios from "axios";
+import React, { useState, useEffect } from "react";
 import { Button, TextField, Typography } from "@material-ui/core";
-import {
-  TezosNodeWriter,
-  TezosParameterFormat,
-  TezosNodeReader,
-} from "conseiljs";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import getThanos from "../util/thanos";
+import { contractAddress } from "../constants/contract";
 
-const tezosNode = "https://carthagenet.smartpy.io";
-async function getContractStorage() {
-  const result = await TezosNodeReader.getContractStorage(
-    "https://carthagenet.smartpy.io",
-    "KT1MuMtaXpjnMYss8VCxEdUgY4nGRUfjbogt"
-  );
-  console.log(result);
-}
-
-export default function RentIn() {
+export default function RentIn(props) {
   const [houseAddress, setHouseAddress] = useState("");
-  const [privateKey, setPrivateKey] = useState("");
-  const [publicKey, setPublicKey] = useState("");
-  const [pkhKey, setPkhKey] = useState("");
   const [deposit, setDeposit] = useState(0);
+  const [instance, setInstance] = useState("");
 
-  const submitForm = async () => {
-    console.log(houseAddress, privateKey, publicKey, pkhKey, deposit);
-    const keystore = {
-      publicKey: publicKey,
-      privateKey: privateKey,
-      publicKeyHash: pkhKey,
-      seed: "",
-      storeType: 1,
-    };
-    const contractAddress = "KT1MuMtaXpjnMYss8VCxEdUgY4nGRUfjbogt";
-    let result;
-    try {
-      result = await TezosNodeWriter.sendContractInvocationOperation(
-        tezosNode,
-        keystore,
-        contractAddress,
-        deposit * 1000000,
-        100000,
-        "",
-        1000,
-        750000,
-        undefined,
-        `(Left (Left "${houseAddress}"))`,
-        TezosParameterFormat.Michelson
-      );
-    } catch (err) {
-      alert("Transaction Unscuccesfull", err);
-    }
+  useEffect(() => {
+    getInstance();
+  }, [props]);
+
+  const getInstance = async () => {
+    const tezos = await getThanos();
+    const instance = await tezos.wallet.at(contractAddress);
+    setInstance(instance);
+  };
+
+  const acceptAgreement = async () => {
+    const operation = await instance.methods
+      .acceptAgreement(houseAddress)
+      .send({ amount: deposit * 1000000 });
+    await operation.confirmation();
     setHouseAddress("");
-    setPkhKey("");
-    setPrivateKey("");
-    setPublicKey("");
     setDeposit(0);
-    alert(`Injected operation group id ${result.operationGroupID}`);
-    return result.operationGroupID;
+    alert(`Injected operation group id ${operation.operationGroupID}`);
   };
 
   return (
@@ -77,30 +45,6 @@ export default function RentIn() {
         <br />
         <TextField
           id="standard-basic"
-          label="Private Key"
-          className="text-field-key"
-          onChange={(e) => setPrivateKey(e.target.value)}
-          value={privateKey}
-        />
-        <br />
-        <TextField
-          id="standard-basic"
-          label="Public Key"
-          className="text-field-key"
-          onChange={(e) => setPublicKey(e.target.value)}
-          value={publicKey}
-        />
-        <br />
-        <TextField
-          id="standard-basic"
-          label="PKH"
-          className="text-field-key"
-          onChange={(e) => setPkhKey(e.target.value)}
-          value={pkhKey}
-        />
-        <br />
-        <TextField
-          id="standard-basic"
           label="Deposit Amount"
           className="text-field-key"
           onChange={(e) => setDeposit(e.target.value)}
@@ -108,14 +52,13 @@ export default function RentIn() {
         />
         <br />
         <Button
-          onClick={() => submitForm()}
+          onClick={() => acceptAgreement()}
           variant="contained"
           color="primary"
           endIcon={<ArrowForwardIcon />}
         >
           Accept & Pay Deposit
         </Button>
-        <Button onClick={() => getContractStorage()}>Get Storage</Button>
       </div>
     </div>
   );

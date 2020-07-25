@@ -1,59 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, TextField, Typography } from "@material-ui/core";
-import { TezosNodeWriter, TezosParameterFormat } from "conseiljs";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-const tezosNode = "https://carthagenet.smartpy.io";
+import { contractAddress } from "../constants/contract";
+import getThanos from "../util/thanos";
 
-export default function PayRent() {
+export default function PayRent(props) {
   const [houseAddress, setHouseAddress] = useState("");
-  const [privateKey, setPrivateKey] = useState("");
-  const [publicKey, setPublicKey] = useState("");
-  const [pkhKey, setPkhKey] = useState("");
-  const [deposit, setDeposit] = useState(0);
   const [rent, setRent] = useState(0);
+  const [instance, setInstance] = useState("");
 
-  const submitForm = async (arg) => {
-    console.log(houseAddress, privateKey, publicKey, pkhKey, deposit);
-    const keystore = {
-      publicKey: publicKey,
-      privateKey: privateKey,
-      publicKeyHash: pkhKey,
-      seed: "",
-      storeType: 1,
-    };
-    const contractAddress = "KT1MuMtaXpjnMYss8VCxEdUgY4nGRUfjbogt";
-    let result;
-    let amount = arg ? 0 : rent * 1000000;
-    try {
-      result = await TezosNodeWriter.sendContractInvocationOperation(
-        tezosNode,
-        keystore,
-        contractAddress,
-        amount,
-        100000,
-        "",
-        1000,
-        750000,
-        undefined,
-        `(Right (Left (Right "${houseAddress}")))`,
-        TezosParameterFormat.Michelson
-      );
-    } catch (err) {
-      alert("Transaction Unscuccesfull", err);
-    }
-    setHouseAddress("");
-    setPkhKey("");
-    setPrivateKey("");
-    setPublicKey("");
-    setDeposit(0);
-    setRent(0);
-    alert(`Injected operation group id ${result.operationGroupID}`);
-    return result.operationGroupID;
+  useEffect(() => {
+    getInstance();
+  }, [props]);
+
+  const getInstance = async () => {
+    const tezos = await getThanos();
+    const instance = await tezos.wallet.at(contractAddress);
+    setInstance(instance);
   };
 
-  const getPreviousRents = () => {
-    console.log("Get Rent.");
+  const payRent = async () => {
+    const operation = await instance.methods
+      .payRent(houseAddress)
+      .send({ amount: rent * 1000000 });
+    await operation.confirmation();
+    setHouseAddress("");
+    alert(`Injected operation group id ${operation.operationGroupID}`);
+  };
+
+  const markDispute = async () => {
+    const operation = await instance.methods
+      .markDispute(houseAddress)
+      .send({ amount: rent * 1000000 });
+    await operation.confirmation();
+    setHouseAddress("");
+    alert(`Injected operation group id ${operation.operationGroupID}`);
   };
 
   return (
@@ -78,54 +60,21 @@ export default function PayRent() {
           value={rent}
         />
         <br />
-        <TextField
-          id="standard-basic"
-          label="Private Key"
-          className="text-field-key"
-          onChange={(e) => setPrivateKey(e.target.value)}
-          value={privateKey}
-        />
-        <br />
-        <TextField
-          id="standard-basic"
-          label="Public Key"
-          className="text-field-key"
-          onChange={(e) => setPublicKey(e.target.value)}
-          value={publicKey}
-        />
-        <br />
-        <TextField
-          id="standard-basic"
-          label="PKH"
-          className="text-field-key"
-          onChange={(e) => setPkhKey(e.target.value)}
-          value={pkhKey}
-        />
-        <br />
         <ButtonGroup
           variant="contained"
           color="primary"
           aria-label="contained primary button group"
         >
           <Button
-            onClick={() => submitForm(0)}
+            onClick={() => payRent()}
             variant="contained"
             color="primary"
             endIcon={<ArrowForwardIcon />}
           >
             Pay Rent
           </Button>
-
           <Button
-            onClick={() => getPreviousRents()}
-            variant="contained"
-            color="primary"
-            endIcon={<ArrowForwardIcon />}
-          >
-            Previous Payments
-          </Button>
-          <Button
-            onClick={() => submitForm(1)}
+            onClick={() => markDispute(1)}
             variant="contained"
             color="primary"
             endIcon={<ArrowForwardIcon />}
