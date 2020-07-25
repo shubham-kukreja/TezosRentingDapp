@@ -11,6 +11,9 @@ In a traditional renting contract the deposit value is held by a trusted third p
 5. Allows Tenant to raise / settle Dispute against owner.
 6. Allows Owner to End Contract & returns deposited money to tenants.
 
+
+## Storage Structure of Smart Contract :
+![Storage](./screenshots/7.png)
 [Link To Contract ](./contract/rent.py)
 
 ## Screenshots :
