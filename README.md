@@ -1,10 +1,8 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 # Decentrailized Renting Dapp
 
 ## Abstract :
 
-In a traditional renting contract the deposit value is held by a trusted third party. In many instances, this third party may be the landlord themselves. This work presents a Proof-of-Concept implementation for trustless renting deposit contracts built on Tezos Blockchain. The Dapp allows Onwer's to rent out their properties through smart contract. The Dapp supports following functionalities :
+In a traditional renting contract the deposit value is held by a trusted third party. In many instances, this third party may be the landlord themselves. This Project is a Proof-of-Concept implementation for trustless renting deposit contracts built on Tezos Blockchain. The Dapp allows Onwer's to rent out their properties through smart contract. The Dapp supports following functionalities :
 
 1. Allows Owners to rent out multiple properties through single smart contract.
 2. Allows Tenants to choose from listed properties and binds an agreement between tenant and the owner with security deposit.
@@ -12,6 +10,19 @@ In a traditional renting contract the deposit value is held by a trusted third p
 4. Allows Tenants to pay rent through smart contract.
 5. Allows Tenant to raise / settle Dispute against owner.
 6. Allows Owner to End Contract & returns deposited money to tenants.
+
+## Screenshots : 
+Home Screen :
+![HomeScreen]('./screenshots/1.png')
+
+Transaction using Thanos Wallet :
+![HomeScreen]('./screenshots/6.png')
+
+## Tech Stack :
+1. SmartPy ( IDE & Deployment)
+2. ConseilJS
+3. React
+4. Material UI
 
 ## Available Scripts
 
