@@ -1,4 +1,4 @@
-# Decentrailized Renting Dapp
+# Decentrailized Renting App
 
 ## Abstract :
 
@@ -7,22 +7,29 @@ In a traditional renting contract the deposit value is held by a trusted third p
 1. Allows Owners to rent out multiple properties through single smart contract.
 2. Allows Tenants to choose from listed properties and binds an agreement between tenant and the owner with security deposit.
 3. Allows Owners to update their listings.
-4. Allows Tenants to pay rent through smart contract.
+4. Allows Tenants to pay rent through smart contract & keep track of paid installments.
 5. Allows Tenant to raise / settle Dispute against owner.
 6. Allows Owner to End Contract & returns deposited money to tenants.
 
-## Screenshots : 
+[Link To Contract ](./contract/rent.py)
+
+## Screenshots :
+
 Home Screen :
 ![HomeScreen](./screenshots/1.png)
 
 Transaction using Thanos Wallet :
 ![HomeScreen](./screenshots/6.png)
 
+[All ScreenShots](./screenshots)
+
 ## Tech Stack :
+
 1. SmartPy ( IDE & Deployment)
 2. ConseilJS
-3. React
-4. Material UI
+3. Thanos Wallet
+4. React
+5. Material UI
 
 ## Available Scripts
 
