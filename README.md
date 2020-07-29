@@ -1,4 +1,4 @@
-# Decentrailized Renting App
+# Decentralized Renting App
 
 ## Abstract :
 
