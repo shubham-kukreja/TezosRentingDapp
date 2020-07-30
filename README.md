@@ -1,4 +1,4 @@
-# Decentralized Renting App
+# RenTez - Decentralized Renting App
 
 ## Abstract :
 
